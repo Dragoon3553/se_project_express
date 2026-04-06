@@ -1,12 +1,15 @@
 const ClothingItem = require("../models/clothingItem");
+const ERRORS = require("../utils/error");
 
 // GET /items
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.status(200).send(items))
+    .then((items) => res.status(ERRORS.SUCCESS.status).send(items))
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(ERRORS.SERVER_ERROR.status)
+        .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 
@@ -15,13 +18,17 @@ const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) => res.status(201).send(item))
+    .then((item) => res.status(ERRORS.CREATED.status).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return res
+          .status(ERRORS.VALIDATION_ERROR.status)
+          .send({ message: ERRORS.VALIDATION_ERROR.message });
       }
-      return res.status(500).send({ message: "Requested resource not found" });
+      return res
+        .status(ERRORS.SERVER_ERROR.status)
+        .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 
@@ -30,15 +37,21 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(ERRORS.SUCCESS.status).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res
+          .status(ERRORS.NOT_FOUND.status)
+          .send({ message: ERRORS.NOT_FOUND.message });
       } else if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res
+          .status(ERRORS.CAST_ERROR.status)
+          .send({ message: ERRORS.CAST_ERROR.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(ERRORS.SERVER_ERROR.status)
+        .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 
@@ -50,15 +63,21 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(ERRORS.SUCCESS.status).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res
+          .status(ERRORS.NOT_FOUND.status)
+          .send({ message: ERRORS.NOT_FOUND.message });
       } else if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res
+          .status(ERRORS.CAST_ERROR.status)
+          .send({ message: ERRORS.CAST_ERROR.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(ERRORS.SERVER_ERROR.status)
+        .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 
@@ -69,15 +88,21 @@ const unlikeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(ERRORS.SUCCESS.status).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res
+          .status(ERRORS.NOT_FOUND.status)
+          .send({ message: ERRORS.NOT_FOUND.message });
       } else if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res
+          .status(ERRORS.CAST_ERROR.status)
+          .send({ message: ERRORS.CAST_ERROR.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res
+        .status(ERRORS.SERVER_ERROR.status)
+        .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 
