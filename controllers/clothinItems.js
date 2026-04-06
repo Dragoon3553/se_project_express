@@ -44,7 +44,8 @@ const deleteItem = (req, res) => {
         return res
           .status(ERRORS.NOT_FOUND.status)
           .send({ message: ERRORS.NOT_FOUND.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(ERRORS.CAST_ERROR.status)
           .send({ message: ERRORS.CAST_ERROR.message });
@@ -70,7 +71,8 @@ const likeItem = (req, res) => {
         return res
           .status(ERRORS.NOT_FOUND.status)
           .send({ message: ERRORS.NOT_FOUND.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(ERRORS.CAST_ERROR.status)
           .send({ message: ERRORS.CAST_ERROR.message });
@@ -95,7 +97,8 @@ const unlikeItem = (req, res) => {
         return res
           .status(ERRORS.NOT_FOUND.status)
           .send({ message: ERRORS.NOT_FOUND.message });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(ERRORS.CAST_ERROR.status)
           .send({ message: ERRORS.CAST_ERROR.message });
