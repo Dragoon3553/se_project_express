@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const clothingItemSchema = new mongoose.Schema({
   name: {
@@ -27,13 +28,14 @@ const clothingItemSchema = new mongoose.Schema({
     ref: "owner",
     required: true,
   },
-  likes: {
+  likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
-    default: "",
-  },
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+module.exports = mongoose.model("clothingItem", clothingItemSchema);
