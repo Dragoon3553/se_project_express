@@ -1,7 +1,11 @@
 // App Exports
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const mainRouter = require("./routes/index");
+
+const { createUser, loginUser } = require("./controllers/users");
+const auth = require("./middlewares/auth");
 
 // App Setup
 const app = express();
@@ -14,14 +18,13 @@ mongoose
   })
   .catch(console.error);
 
+app.use(cors());
 // Middleware
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: "69d373e50402eb435af6ddfe",
-  };
-  next();
-});
+app.post("/signup", createUser);
+app.post("/signin", loginUser);
+
+app.use(auth);
 app.use("/", mainRouter);
 
 app.listen(PORT, () => {

@@ -35,9 +35,20 @@ const createItem = (req, res) => {
 // DELETE /items/:itemId
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
-    .then((item) => res.status(ERRORS.SUCCESS.status).send(item))
+    .then((item) => {
+      // Check if the current user is the owner of the item
+      if (item.owner.toString() !== req.user._id) {
+        return res
+          .status(ERRORS.FORBIDDEN.status)
+          .send({ message: ERRORS.FORBIDDEN.message });
+      }
+      // If the user is the owner, delete the item
+      return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) =>
+        res.status(ERRORS.SUCCESS.status).send(deletedItem)
+      );
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
