@@ -4,7 +4,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
 
+// Controller Exports
 const { createUser, loginUser } = require("./controllers/users");
+const { getClothingItems } = require("./controllers/clothinItems");
+
+// Middleware Exports
 const auth = require("./middlewares/auth");
 
 // App Setup
@@ -23,6 +27,7 @@ app.use(cors());
 app.use(express.json());
 app.post("/signup", createUser);
 app.post("/signin", loginUser);
+app.get("/items", getClothingItems);
 
 app.use(auth);
 app.use("/", mainRouter);
