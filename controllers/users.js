@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const validator = require("validator");
 const User = require("../models/user");
 const ERRORS = require("../utils/error");
 const { JWT_SECRET } = require("../utils/config");
@@ -62,7 +61,13 @@ const updateCurrentUser = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  bcrypt
+  if (!email || !password) {
+    return res.status(ERRORS.BAD_REQUEST.status).send({
+      message: "The 'email' and 'password' fields are required",
+    });
+  }
+
+  return bcrypt
     .hash(password, 10)
     .then((hash) => {
       User.create({ name, avatar, email, password: hash })
@@ -83,11 +88,6 @@ const createUser = (req, res) => {
             return res
               .status(ERRORS.DUPLICATE_KEY.status)
               .send({ message: ERRORS.DUPLICATE_KEY.message });
-          }
-          if (err.name === "InvalidUrlError") {
-            return res
-              .status(ERRORS.VALIDATION_ERROR.status)
-              .send({ message: "Invalid URL format for avatar" });
           }
           return res
             .status(ERRORS.SERVER_ERROR.status)
@@ -111,22 +111,10 @@ const createUser = (req, res) => {
 const loginUser = (req, res) => {
   const { email, password } = req.body;
 
-  if (!email) {
-    return res
-      .status(ERRORS.EMAIL_REQUIRED.status)
-      .send({ message: ERRORS.EMAIL_REQUIRED.message });
-  }
-
-  if (!validator.isEmail(email)) {
-    return res
-      .status(ERRORS.INVALID_EMAIL.status)
-      .send({ message: ERRORS.INVALID_EMAIL.message });
-  }
-
-  if (!password) {
-    return res
-      .status(ERRORS.PASSWORD_REQUIRED.status)
-      .send({ message: ERRORS.PASSWORD_REQUIRED.message });
+  if (!email || !password) {
+    return res.status(ERRORS.BAD_REQUEST.status).send({
+      message: ERRORS.BAD_REQUEST.message,
+    });
   }
 
   return User.findUserByCredentials(email, password)
@@ -141,9 +129,19 @@ const loginUser = (req, res) => {
     .catch((err) => {
       // Authentication failed
       console.error(err);
+      if (err.name === "InvalidEmailError") {
+        return res
+          .status(ERRORS.INVALID_EMAIL.status)
+          .send({ message: ERRORS.INVALID_EMAIL.message });
+      }
+      if (err.name === "AuthenticationError") {
+        return res
+          .status(ERRORS.UNAUTHORIZED.status)
+          .send({ message: ERRORS.UNAUTHORIZED.message });
+      }
       return res
-        .status(ERRORS.UNAUTHORIZED.status)
-        .send({ message: ERRORS.UNAUTHORIZED.message });
+        .status(ERRORS.SERVER_ERROR.status)
+        .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 

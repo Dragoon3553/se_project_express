@@ -40,7 +40,10 @@ const ERRORS = {
     status: STATUS_CODE.BAD_REQUEST,
     message: "Validation failed",
   },
-  CAST_ERROR: { status: STATUS_CODE.BAD_REQUEST, message: "Invalid data type" },
+  CAST_ERROR: {
+    status: STATUS_CODE.BAD_REQUEST,
+    message: "Invalid data type",
+  },
   EMAIL_REQUIRED: {
     status: STATUS_CODE.BAD_REQUEST,
     message: "Email is required",

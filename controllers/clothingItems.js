@@ -78,6 +78,8 @@ const likeItem = (req, res) => {
     .then((item) => res.status(ERRORS.SUCCESS.status).send(item))
     .catch((err) => {
       console.error(err);
+      console.error("Error details:", err);
+      console.error("Error name:", err.name);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(ERRORS.NOT_FOUND.status)
