@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: [true, "The avatar field is required"],
     validate: {
       validator(v) {
         return validator.isURL(v);
@@ -44,8 +43,8 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
 ) {
   // Email validation
   if (!validator.isEmail(email)) {
-    const err = new Error('Invalid email format');
-    err.name = 'InvalidEmailError';
+    const err = new Error("Invalid email format");
+    err.name = "InvalidEmailError";
     return Promise.reject(err);
   }
 
@@ -53,14 +52,14 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
     .select("+password")
     .then((user) => {
       if (!user) {
-        const err = new Error('Incorrect email or password');
-        err.name = 'AuthenticationError';
+        const err = new Error("Incorrect email or password");
+        err.name = "AuthenticationError";
         return Promise.reject(err);
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          const err = new Error('Incorrect email or password');
-          err.name = 'AuthenticationError';
+          const err = new Error("Incorrect email or password");
+          err.name = "AuthenticationError";
           return Promise.reject(err);
         }
         return user;
