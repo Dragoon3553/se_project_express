@@ -1,14 +1,17 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-const ERRORS = require("../utils/error");
+
+// Error Constructor Imports
+const NotFoundError = require("../errors/not-found-err");
+const BadRequestError = require("../errors/bad-request-err");
+const UnauthorizedError = require("../errors/unathorized-err");
+// const ERRORS = require("../utils/error");
 
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res
-      .status(ERRORS.UNAUTHORIZED.status)
-      .send({ message: ERRORS.UNAUTHORIZED.message });
+    throw new UnauthorizedError("Authorization header is missing or malformed");
   }
 
   const token = authorization.replace("Bearer ", "");
@@ -17,10 +20,7 @@ const auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    console.error(err);
-    return res
-      .status(ERRORS.UNAUTHORIZED.status)
-      .send({ message: ERRORS.UNAUTHORIZED.message });
+    throw new UnauthorizedError("Invalid token");
   }
 
   req.user = payload;
