@@ -5,7 +5,6 @@ const { JWT_SECRET } = require("../utils/config");
 const NotFoundError = require("../errors/not-found-err");
 const BadRequestError = require("../errors/bad-request-err");
 const UnauthorizedError = require("../errors/unathorized-err");
-// const ERRORS = require("../utils/error");
 
 const auth = (req, res, next) => {
   const { authorization } = req.headers;

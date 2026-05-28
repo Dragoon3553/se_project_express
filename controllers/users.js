@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-// const ERRORS = require("../utils/error");
 
 // Error Constructor Imports
 const NotFoundError = require("../errors/not-found-err");
@@ -20,7 +19,6 @@ const getCurrentUser = (req, res, next) => {
       }
 
       res.send(user);
-      // res.status(ERRORS.SUCCESS.status).send(user);
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -28,9 +26,6 @@ const getCurrentUser = (req, res, next) => {
       } else {
         next(err);
       }
-      // return res
-      //   .status(ERRORS.SERVER_ERROR.status)
-      //   .send({ message: ERRORS.SERVER_ERROR.message });
     });
 };
 
@@ -49,7 +44,6 @@ const updateCurrentUser = (req, res, next) => {
       }
 
       res.send(user);
-      // res.status(ERRORS.SUCCESS.status).send(user);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -66,9 +60,6 @@ const createUser = (req, res, next) => {
 
   if (!email || !password) {
     throw new BadRequestError("The 'email' and 'password' fields are required");
-    // return res.status(ERRORS.BAD_REQUEST.status).send({
-    //   message: "The 'email' and 'password' fields are required",
-    // });
   }
 
   return bcrypt
@@ -84,14 +75,10 @@ const createUser = (req, res, next) => {
           const userObj = user.toObject();
           delete userObj.password;
           res.send(userObj);
-          // res.status(ERRORS.CREATED.status).send(userObj);
         })
         .catch((err) => {
           if (err.code === 11000) {
             next(new ConflictError("This resource already exists"));
-            // return res
-            //   .status(ERRORS.DUPLICATE_KEY.status)
-            //   .send({ message: ERRORS.DUPLICATE_KEY.message });
           } else {
             next(err);
           }
@@ -100,10 +87,6 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === "ValidationError") {
         next(new BadRequestError("Unable to validate the user"));
-        //   return res
-        //     .status(ERRORS.VALIDATION_ERROR.status)
-        //     .send({ message: ERRORS.VALIDATION_ERROR.message });
-      } else {
         next(err);
       }
     });
@@ -115,9 +98,6 @@ const loginUser = (req, res, next) => {
 
   if (!email || !password) {
     throw new BadRequestError("The 'email' and 'password' fields are required");
-    // return res.status(ERRORS.BAD_REQUEST.status).send({
-    //   message: ERRORS.BAD_REQUEST.message,
-    // });
   }
 
   return User.findUserByCredentials(email, password)
@@ -135,16 +115,8 @@ const loginUser = (req, res, next) => {
     })
     .catch((err) => {
       // Authentication failed
-      // if (err.name === "InvalidEmailError") {
-      //   return res
-      //     .status(ERRORS.INVALID_EMAIL.status)
-      //     .send({ message: ERRORS.INVALID_EMAIL.message });
-      // }
       if (err.name === "AuthenticationError") {
         next(new UnauthorizedError("Unauthorized to access resource"));
-        // return res
-        //   .status(ERRORS.UNAUTHORIZED.status)
-        //   .send({ message: ERRORS.UNAUTHORIZED.message });
       } else {
         next(err);
       }

@@ -5,8 +5,6 @@ const BadRequestError = require("../errors/bad-request-err");
 const NotFoundError = require("../errors/not-found-err");
 const ForbiddenError = require("../errors/forbidden-err");
 
-// const ERRORS = require("../utils/error");
-
 // GET /items
 const getClothingItems = (req, res, next) => {
   ClothingItem.find({})
@@ -16,7 +14,6 @@ const getClothingItems = (req, res, next) => {
       }
 
       res.send(items);
-      // res.status(ERRORS.SUCCESS.status).send(items);
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -38,14 +35,10 @@ const createItem = (req, res, next) => {
       }
 
       res.send(item);
-      // res.status(ERRORS.CREATED.status).send(item);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
         next(new BadRequestError("Unable to validate item"));
-        // return res
-        //   .status(ERRORS.VALIDATION_ERROR.status)
-        //   .send({ message: ERRORS.VALIDATION_ERROR.message });
       } else {
         next(err);
       }
@@ -67,9 +60,6 @@ const deleteItem = (req, res, next) => {
         throw new ForbiddenError(
           "You do not have permission to delete this item"
         );
-        // return res
-        //   .status(ERRORS.FORBIDDEN.status)
-        //   .send({ message: ERRORS.FORBIDDEN.message });
       }
       // If the user is the owner, delete the item
       return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) => {
@@ -78,7 +68,6 @@ const deleteItem = (req, res, next) => {
         }
 
         res.send(deletedItem);
-        // res.status(ERRORS.SUCCESS.status).send(deletedItem)
       });
     })
     .catch((err) => {
@@ -127,7 +116,6 @@ const unlikeItem = (req, res, next) => {
       }
 
       res.send(item);
-      // res.status(ERRORS.SUCCESS.status).send(item);
     })
     .catch((err) => {
       if (err.name === "CastError") {
