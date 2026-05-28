@@ -1,8 +1,8 @@
-require("dotenv").config();
 // App Exports
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 
 // Middleware Exports
 const mainRouter = require("./routes/index");
