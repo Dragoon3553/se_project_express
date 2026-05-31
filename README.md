@@ -16,6 +16,8 @@ This app uses models for the properties of the clothing items and users. There i
 - Routing
 - Validation
 
-## Project Pitch Video
+## Links
 
-Check out [this video](https://www.loom.com/share/23c64288d2bb4c0487d6e6ca30bfbef8), where I briefly describe the project.
+- [Project Domain](https://www.wtwrexpress.datacenter.ar/)
+- [Frontend GitHub repo](https://github.com/Dragoon3553/se_project_react)
+- [Project Pitch](https://www.loom.com/share/1547c43c2adf4a1eacaafbfd3a3acc4e)
